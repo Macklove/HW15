@@ -16,15 +16,28 @@ class SettingsController: UIViewController {
         return view as? SettingsView
     }
 
-// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view = SettingsView()
         model = SettingsModel()
+
+        configureView()
     }
+
+     override func viewWillAppear(_ animated: Bool) {
+         (view as? SettingsView)?.setupNavigation(self)
+     }
 
 }
 
+// MARK: - Configuration
 
+private extension SettingsController {
+    func configureView() {
+        guard let models = model?.createModels() else { return }
+        settingsView?.configureView(with: models)
+    }
+}

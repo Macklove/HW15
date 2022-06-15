@@ -125,10 +125,56 @@ class SettingsTableViewCell: UITableViewCell {
     // MARK: - Settings
     
     private func setupHierarchy() {
+        contentView.addSubview(iconContainer)
+        iconContainer.addSubview(icon)
+        contentView.addSubview(label)
+        contentView.clipsToBounds = true
     }
     
     private func setupLayout() {
+        let iconContainerSize: CGFloat = contentView.frame.size.height - Metric.offsetBackgroundIcon
+        let iconSize: CGFloat = iconContainerSize / Metric.multiplierIcon
+        
+        NSLayoutConstraint.activate([
+            iconContainer.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            iconContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metric.horizontalOffset),
+            iconContainer.widthAnchor.constraint(equalToConstant: iconContainerSize),
+            iconContainer.heightAnchor.constraint(equalToConstant: iconContainerSize),
+
+            icon.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            icon.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            icon.widthAnchor.constraint(equalToConstant: iconSize),
+            icon.heightAnchor.constraint(equalToConstant: iconSize),
+        ])
+        toggle?.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metric.horizontalOffset).isActive = true
+        toggle?.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+
+        if let container = badgeContainer, let badge = additionalLabel {
+            let width: CGFloat = CGFloat(badge.text?.count ?? 1) * 10 + 20
+            badgeContainer?.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+            badgeContainer?.leadingAnchor.constraint(equalTo: label.trailingAnchor).isActive = true
+            badgeContainer?.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metric.spaceBetweenObjects).isActive = true
+            badgeContainer?.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -Metric.horizontalOffset).isActive = true
+            badgeContainer?.widthAnchor.constraint(equalToConstant: width).isActive = true
+            additionalLabel?.centerYAnchor.constraint(equalTo: container.centerYAnchor).isActive = true
+            additionalLabel?.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
+        } else if additionalLabel != nil {
+            additionalLabel?.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+            additionalLabel?.leadingAnchor.constraint(equalTo: label.trailingAnchor).isActive = true
+            additionalLabel?.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metric.spaceBetweenObjects).isActive = true
+            additionalLabel?.heightAnchor.constraint(equalTo: contentView.heightAnchor).isActive = true
+        }
+        
+        label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: Metric.spaceBetweenObjects).isActive = true
+        if let additionalLabel = additionalLabel {
+            label.trailingAnchor.constraint(equalTo: additionalLabel.leadingAnchor).isActive = true
+        } else {
+            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metric.spaceBetweenObjects).isActive = true
+        }
+        label.heightAnchor.constraint(equalTo: contentView.heightAnchor).isActive = true
     }
+    
     //MARK: - Actions
     
     @objc func switchTap(_ sender: UISwitch) {
@@ -149,4 +195,3 @@ extension SettingsTableViewCell {
         static let multiplierCornerRadiusBadge: CGFloat = 0.8
     }
 }
-
