@@ -11,7 +11,7 @@ class SettingsTableViewCell: UITableViewCell {
 
     static let identifier = "SettingsTableViewCell"
     
-// MARK: - Views
+    // MARK: - Views
 
     private let iconContainer: UIView = {
         let view = UIView()
@@ -41,66 +41,94 @@ class SettingsTableViewCell: UITableViewCell {
     
     private var toggle: UISwitch?
 
-
-var settingItem: Setting? {
-    didSet {
-        guard let item = settingItem else { return }
-        
-        label.text = item.name
-        
-        if let bgColor = item.iconBackground {
-            iconContainer.backgroundColor = bgColor
-        }
-        
-        if let iconItem = item.icon {
-            icon.image = iconItem
-        }
-        
-        if let toggleItem = item.isChecked {
-            if toggle == nil {
-                toggle = UISwitch()
-                toggle?.translatesAutoresizingMaskIntoConstraints = false
-                toggle?.setOn(toggleItem, animated: true)
-                toggle?.addTarget(self, action: #selector(switchTap), for: .valueChanged)
-                if let toggle = toggle {
-                    contentView.addSubview(toggle)
+    var settingItem: Setting? {
+        didSet {
+            guard let item = settingItem else { return }
+            
+            label.text = item.name
+            
+            if let bgColor = item.iconBackground {
+                iconContainer.backgroundColor = bgColor
+            }
+            
+            if let iconItem = item.icon {
+                icon.image = iconItem
+            }
+            
+            if let toggleItem = item.isChecked {
+                if toggle == nil {
+                    toggle = UISwitch()
+                    toggle?.translatesAutoresizingMaskIntoConstraints = false
+                    toggle?.setOn(toggleItem, animated: true)
+                    toggle?.addTarget(self, action: #selector(switchTap), for: .valueChanged)
+                    if let toggle = toggle {
+                        contentView.addSubview(toggle)
+                    }
                 }
+            } else {
+                accessoryType = .disclosureIndicator // стрелочка справа
             }
-        } else {
-            accessoryType = .disclosureIndicator // стрелочка справа
-        }
-        if let badge = item.badge {
-            badgeContainer = UIView()
-            badgeContainer?.clipsToBounds = true
-            badgeContainer?.layer.cornerRadius = (additionalLabel?.font.pointSize ?? 17) * Metric.multiplierCornerRadiusBadge
-            badgeContainer?.backgroundColor = .systemRed
-            badgeContainer?.translatesAutoresizingMaskIntoConstraints = false
-            
-            additionalLabel = UILabel()
-            additionalLabel?.textAlignment = .center
-            additionalLabel?.textColor = .white
-            additionalLabel?.backgroundColor = .systemRed
-            additionalLabel?.text = String(badge)
-            additionalLabel?.translatesAutoresizingMaskIntoConstraints = false
-            
-            if let additionalLabel = additionalLabel {
-                badgeContainer?.addSubview(additionalLabel)
-            }
-            if let badgeContainer = badgeContainer {
-                contentView.addSubview(badgeContainer)
-            }
-        } else if let text = item.rightText {
-            additionalLabel = UILabel()
-            additionalLabel?.textAlignment = .right
-            additionalLabel?.tintColor = .systemGray
-            additionalLabel?.text = text
-            additionalLabel?.translatesAutoresizingMaskIntoConstraints = false
-            if let additionalLabel = additionalLabel {
-                contentView.addSubview(additionalLabel)
+            if let badge = item.badge {
+                badgeContainer = UIView()
+                badgeContainer?.clipsToBounds = true
+                badgeContainer?.layer.cornerRadius = (additionalLabel?.font.pointSize ?? 17) * Metric.multiplierCornerRadiusBadge
+                badgeContainer?.backgroundColor = .systemRed
+                badgeContainer?.translatesAutoresizingMaskIntoConstraints = false
+                
+                additionalLabel = UILabel()
+                additionalLabel?.textAlignment = .center
+                additionalLabel?.textColor = .white
+                additionalLabel?.backgroundColor = .systemRed
+                additionalLabel?.text = String(badge)
+                additionalLabel?.translatesAutoresizingMaskIntoConstraints = false
+                
+                if let additionalLabel = additionalLabel {
+                    badgeContainer?.addSubview(additionalLabel)
+                }
+                if let badgeContainer = badgeContainer {
+                    contentView.addSubview(badgeContainer)
+                }
+            } else if let text = item.rightText {
+                additionalLabel = UILabel()
+                additionalLabel?.textAlignment = .right
+                additionalLabel?.tintColor = .systemGray
+                additionalLabel?.text = text
+                additionalLabel?.translatesAutoresizingMaskIntoConstraints = false
+                if let additionalLabel = additionalLabel {
+                    contentView.addSubview(additionalLabel)
+                }
             }
         }
     }
-}
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupHierarchy()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupLayout()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        icon.image = nil
+        label.text = nil
+        iconContainer.backgroundColor = nil
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    // MARK: - Settings
+    
+    private func setupHierarchy() {
+    }
+    
+    private func setupLayout() {
+    }
     //MARK: - Actions
     
     @objc func switchTap(_ sender: UISwitch) {
@@ -109,7 +137,6 @@ var settingItem: Setting? {
         }
     }
 }
-
 
 // MARK: - Constants
 extension SettingsTableViewCell {
