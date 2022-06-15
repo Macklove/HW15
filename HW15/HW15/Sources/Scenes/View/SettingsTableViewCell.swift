@@ -9,15 +9,35 @@ import UIKit
 
 class SettingsTableViewCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+    static let identifier = "SettingsTableViewCell"
+    
+// MARK: - Views
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
+    private let iconContainer: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 4
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let icon: UIImageView = {
+        let img = UIImageView()
+        img.tintColor = .white
+        img.contentMode = .scaleAspectFit
+        img.translatesAutoresizingMaskIntoConstraints = false
+        return img
+    }()
+    
+    private let label: UILabel = {
+        let label = UILabel()
+        label.tag = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private var badgeContainer: UIView?
+    private var additionalLabel: UILabel?
+    
+    private var toggle: UISwitch?
 }
