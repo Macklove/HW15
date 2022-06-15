@@ -40,7 +40,76 @@ class SettingsTableViewCell: UITableViewCell {
     private var additionalLabel: UILabel?
     
     private var toggle: UISwitch?
+
+
+var settingItem: Setting? {
+    didSet {
+        guard let item = settingItem else { return }
+        
+        label.text = item.name
+        
+        if let bgColor = item.iconBackground {
+            iconContainer.backgroundColor = bgColor
+        }
+        
+        if let iconItem = item.icon {
+            icon.image = iconItem
+        }
+        
+        if let toggleItem = item.isChecked {
+            if toggle == nil {
+                toggle = UISwitch()
+                toggle?.translatesAutoresizingMaskIntoConstraints = false
+                toggle?.setOn(toggleItem, animated: true)
+                toggle?.addTarget(self, action: #selector(switchTap), for: .valueChanged)
+                if let toggle = toggle {
+                    contentView.addSubview(toggle)
+                }
+            }
+        } else {
+            accessoryType = .disclosureIndicator // стрелочка справа
+        }
+        if let badge = item.badge {
+            badgeContainer = UIView()
+            badgeContainer?.clipsToBounds = true
+            badgeContainer?.layer.cornerRadius = (additionalLabel?.font.pointSize ?? 17) * Metric.multiplierCornerRadiusBadge
+            badgeContainer?.backgroundColor = .systemRed
+            badgeContainer?.translatesAutoresizingMaskIntoConstraints = false
+            
+            additionalLabel = UILabel()
+            additionalLabel?.textAlignment = .center
+            additionalLabel?.textColor = .white
+            additionalLabel?.backgroundColor = .systemRed
+            additionalLabel?.text = String(badge)
+            additionalLabel?.translatesAutoresizingMaskIntoConstraints = false
+            
+            if let additionalLabel = additionalLabel {
+                badgeContainer?.addSubview(additionalLabel)
+            }
+            if let badgeContainer = badgeContainer {
+                contentView.addSubview(badgeContainer)
+            }
+        } else if let text = item.rightText {
+            additionalLabel = UILabel()
+            additionalLabel?.textAlignment = .right
+            additionalLabel?.tintColor = .systemGray
+            additionalLabel?.text = text
+            additionalLabel?.translatesAutoresizingMaskIntoConstraints = false
+            if let additionalLabel = additionalLabel {
+                contentView.addSubview(additionalLabel)
+            }
+        }
+    }
 }
+    //MARK: - Actions
+    
+    @objc func switchTap(_ sender: UISwitch) {
+        if let label = (sender.superview?.viewWithTag(1) as? UILabel) {
+            print("\(label.text ?? "Unknown switch") changed to \(sender.isOn)")
+        }
+    }
+}
+
 
 // MARK: - Constants
 extension SettingsTableViewCell {
@@ -53,3 +122,4 @@ extension SettingsTableViewCell {
         static let multiplierCornerRadiusBadge: CGFloat = 0.8
     }
 }
+
