@@ -41,3 +41,15 @@ class SettingsTableViewCell: UITableViewCell {
     
     private var toggle: UISwitch?
 }
+
+// MARK: - Constants
+extension SettingsTableViewCell {
+    
+    enum Metric {
+        static let horizontalOffset: CGFloat = 16
+        static let spaceBetweenObjects: CGFloat = 15
+        static let offsetBackgroundIcon: CGFloat = 12
+        static let multiplierIcon: CGFloat = 1.5
+        static let multiplierCornerRadiusBadge: CGFloat = 0.8
+    }
+}

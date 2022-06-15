@@ -7,14 +7,25 @@
 
 import UIKit
 
-class SettingsView: UIView {
+final class SettingsView: UIView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+        // MARK: - Configuration
+        func configureView(with models: [SettingsGroup]) {
+            self.models = models
+            settingsTable.reloadData()
+        }
 
+        // MARK: - Private properties
+        private var models = [SettingsGroup]()
+
+        // MARK: - Views
+        private lazy var settingsTable: UITableView = {
+            let table = UITableView(frame: .zero, style: .grouped)
+            table.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.identifier)
+            table.translatesAutoresizingMaskIntoConstraints = false
+            
+
+
+            return table
+        }()
 }
